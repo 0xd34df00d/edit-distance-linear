@@ -23,7 +23,7 @@ levenshteinDistance s1 s2 = runST $ do
     n = BS.length s2
 
     loop :: Int -> A.STUArray s Int Int -> A.STUArray s Int Int -> ST s ()
-    loop i v0 v1 = do
+    loop !i !v0 !v1 = do
       A.unsafeWrite v1 0 (i + 1)
       let !s1char = s1 `BS.index` i
       forM_ [0..n - 1] $ \(!j) -> do
