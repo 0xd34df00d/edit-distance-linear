@@ -1,4 +1,5 @@
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 module Text.EditDistance.Linear where
 
@@ -26,9 +27,12 @@ levenshteinDistance s1 s2 = runST $ do
     loop !i !v0 !v1 = do
       A.unsafeWrite v1 0 (i + 1)
       let !s1char = s1 `BS.index` i
-      forM_ [0..n - 1] $ \(!j) -> do
-        delCost <- v0 `A.unsafeRead` (j + 1)
-        insCost <- v1 `A.unsafeRead` j
-        substCostBase <- v0 `A.unsafeRead` j
-        let !substCost = if s1char == s2 `BS.index` j then 0 else 1
-        A.unsafeWrite v1 (j + 1) $ min (substCost + substCostBase) $ 1 + min delCost insCost
+      let go !j | j == n = pure ()
+                | otherwise = do
+            delCost <- v0 `A.unsafeRead` (j + 1)
+            insCost <- v1 `A.unsafeRead` j
+            substCostBase <- v0 `A.unsafeRead` j
+            let !substCost = if s1char == s2 `BS.index` j then 0 else 1
+            A.unsafeWrite v1 (j + 1) $ min (substCost + substCostBase) $ 1 + min delCost insCost
+            go (j + 1)
+      go 0
