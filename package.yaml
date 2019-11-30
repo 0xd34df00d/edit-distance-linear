@@ -24,6 +24,9 @@ dependencies:
 - array
 - bytestring
 
+ghc-options:
+- -Wall
+
 library:
   source-dirs: src
 
