@@ -26,13 +26,13 @@ levenshteinDistance s1 s2 = runST $ do
                     | otherwise = do
       A.unsafeWrite v1 0 (i + 1)
       let !s1char = s1 `BU.unsafeIndex` i
-      let go !j | j == n = pure ()
-                | otherwise = do
+      let go !j !prev | j == n = pure ()
+                      | otherwise = do
             delCost <- v0 `A.unsafeRead` (j + 1)
-            insCost <- v1 `A.unsafeRead` j
             substCostBase <- v0 `A.unsafeRead` j
             let !substCost = if s1char == s2 `BU.unsafeIndex` j then 0 else 1
-            A.unsafeWrite v1 (j + 1) $ min (substCost + substCostBase) $ 1 + min delCost insCost
-            go (j + 1)
-      go 0
+            let !res = min (substCost + substCostBase) $ 1 + min delCost prev
+            A.unsafeWrite v1 (j + 1) res
+            go (j + 1) res
+      go 0 (i + 1)
       loop (i + 1) v1 v0
