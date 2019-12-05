@@ -51,5 +51,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - edit-distance-linear
+    - edit-distance
     - hspec
     - QuickCheck
