@@ -27,6 +27,20 @@ ghc-options:
 library:
   source-dirs: src
 
+benchmarks:
+  edit-distance-linear-bench:
+    main: Bench.hs
+    source-dirs: bench
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - edit-distance-linear
+    - criterion
+    - text
+    - text-metrics
+
 executables:
   edit-distance-linear-exe:
     main:                Main.hs
