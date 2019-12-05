@@ -7,7 +7,6 @@ import qualified Data.Array.Base as A(unsafeRead, unsafeWrite)
 import qualified Data.Array.ST as A
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Unsafe as BU
-import Control.Monad
 import Control.Monad.ST
 
 levenshteinDistance :: BS.ByteString -> BS.ByteString -> Int
