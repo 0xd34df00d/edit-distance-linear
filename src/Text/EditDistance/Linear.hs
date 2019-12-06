@@ -1,13 +1,15 @@
-{-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE BangPatterns, LambdaCase #-}
 {-# LANGUAGE FlexibleContexts #-}
 
 module Text.EditDistance.Linear where
 
 import qualified Data.Array.Base as A(unsafeRead, unsafeWrite)
 import qualified Data.Array.ST as A
-import qualified Data.ByteString.Char8 as BS
+import qualified Data.ByteString as BS
 import qualified Data.ByteString.Unsafe as BU
 import Control.Monad.ST
+import Data.Bits
+import Data.Word
 
 levenshteinDistance :: BS.ByteString -> BS.ByteString -> Int
 levenshteinDistance s1 s2 = runST $ do
@@ -35,3 +37,32 @@ levenshteinDistance s1 s2 = runST $ do
             go (j + 1) res
       go 0 (i + 1)
       loop (i + 1) v1 v0
+
+newtype MatchMatrix s = MatchMatrix { getMatchMatrix :: A.STArray s Word8 (Maybe (A.STUArray s Int Word64)) }
+
+matchVector :: MatchMatrix s -> Word8 -> ST s (Maybe (A.STUArray s Int Word64))
+matchVector (MatchMatrix m) w = do
+  bounds <- A.getBounds m
+  if A.inRange bounds w
+    then A.readArray m w
+    else pure Nothing
+
+matchMatrix :: BS.ByteString -> ST s (MatchMatrix s)
+matchMatrix str = MatchMatrix <$> do
+  mat <- A.newArray (minChar, maxChar) Nothing
+  let go _ [] = pure mat
+      go !idx ((!c):cs) = do
+        vec <- A.readArray mat c >>=
+                \case Just vec -> pure vec
+                      Nothing -> do
+                        newVec <- A.newArray (0, 1 + BS.length str `div` 8) 0
+                        A.writeArray mat c $ Just newVec
+                        pure newVec
+        let (!wordPos, !bitPos) = idx `divMod` 8
+        cur <- A.unsafeRead vec wordPos
+        A.unsafeWrite vec wordPos $ cur .|. bit bitPos
+        go (idx + 1) cs
+  go 0 $ BS.unpack str
+  where
+    minChar = BS.minimum str
+    maxChar = BS.maximum str
