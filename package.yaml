@@ -10,7 +10,7 @@ extra-source-files:
 - README.md
 - ChangeLog.md
 
-synopsis:            Efficient implementation Levenshtein distance in linear memory.
+synopsis:            Efficient implementation of the Levenshtein edit distance in linear memory.
 category:            Algorithms
 
 description:         Please see the README on GitHub at <https://github.com/0xd34df00d/edit-distance-linear#readme>
