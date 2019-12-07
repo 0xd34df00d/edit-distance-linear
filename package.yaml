@@ -25,13 +25,20 @@ flags:
     description: Build the test executable (a fast and dirty way of benchmarking, for the package development only)
     manual: true
     default: false
+  llvm:
+    description: Use the LLVM code generator (strongly recommended)
+    manual: true
+    default: true
 
 ghc-options:
 - -Wall
-- -fllvm
 
 library:
   source-dirs: src
+  when:
+  - condition: flag(llvm)
+    ghc-options:
+    - -fllvm
 
 benchmarks:
   edit-distance-linear-bench:
