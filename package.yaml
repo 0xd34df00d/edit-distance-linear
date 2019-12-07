@@ -20,6 +20,12 @@ dependencies:
 - array
 - bytestring
 
+flags:
+  with-executable:
+    description: Build the test executable (a fast and dirty way of benchmarking, for the package development only)
+    manual: true
+    default: false
+
 ghc-options:
 - -Wall
 - -fllvm
@@ -50,6 +56,9 @@ executables:
     - -rtsopts
     dependencies:
     - edit-distance-linear
+    when:
+    - condition: ! '!(flag(with-executable))'
+      buildable: false
 
 tests:
   edit-distance-linear-test:
