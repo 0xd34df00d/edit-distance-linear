@@ -1,6 +1,7 @@
 # edit-distance-linear
 
 [![Build Status][travis-badge]][travis]
+[![Hackage][hackage-badge]][hackage]
 
 The pure Haskell implementation of the Levenshtein edit distance, with linear space complexity.
 
@@ -16,3 +17,5 @@ Among the alternatives:
 
 [travis]:        <https://travis-ci.org/0xd34df00d/edit-distance-linear>
 [travis-badge]:  <https://travis-ci.org/0xd34df00d/edit-distance-linear.svg?branch=master>
+[hackage]:       <https://hackage.haskell.org/package/edit-distance-linear>
+[hackage-badge]: <https://img.shields.io/hackage/v/edit-distance-linear.svg>
