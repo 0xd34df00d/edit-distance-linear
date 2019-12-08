@@ -1,5 +1,9 @@
 # Changelog for edit-distance-linear
 
+## v0.2.0.2
+
+* Turn the LLVM flag off by default.
+
 ## v0.2.0.1
 
 * Made the test executable and the LLVM codegen optional.
