@@ -28,7 +28,7 @@ flags:
   llvm:
     description: Use the LLVM code generator (strongly recommended)
     manual: true
-    default: true
+    default: false
 
 ghc-options:
 - -Wall
